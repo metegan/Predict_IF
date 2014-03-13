@@ -13,13 +13,15 @@ import metier.modele.Signe;
  * @author Administrateur
  */
 public class SigneDao {
-        
+    
+	//persist   
     public static void persist( Signe s)
     {
         EntityManager em = JpaUtil.obtenirEntityManager();
         em.persist(s);
     }
-    
+    //recherche
+	//par id
     public static Signe getSigneById( long id )
     {
         EntityManager em = JpaUtil.obtenirEntityManager();
@@ -28,4 +30,15 @@ public class SigneDao {
         //return (Signe) q.getSingleResult();
         return em.find(Signe.class,id);
     }
+	//toutes les signes
+	public List<Signe> getAllSigne() {
+        EntityManager em = JPAUtils.obtenirEntityManager();
+        Query q = em.createQuery("SELECT a from Signe a");
+        List<Signe> results = (List<Signe>) q.getResultList();
+        return results;
+    }
+	
+	
+	
+	
 }

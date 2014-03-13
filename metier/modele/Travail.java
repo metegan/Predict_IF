@@ -20,9 +20,15 @@ public class Travail extends Prediction implements Serializable {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
+	//constructeur
     public Travail()
    {
        super();
    }
+   //affichage
+	public String getType()
+	{
+		return "travail: ";
+	}
 
 }

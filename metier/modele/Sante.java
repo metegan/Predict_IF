@@ -20,6 +20,8 @@ public class Sante extends Prediction implements Serializable  {
     @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
     private String conseil;
+	
+	//constructeurs
     public Sante(String conseil)
    {
        super();
@@ -27,6 +29,16 @@ public class Sante extends Prediction implements Serializable  {
    }
    public Sante()
    {
-   
+		super();
    }
+    //getters
+    public String getConseil() {
+        return conseil;
+    }
+	//affichage
+	public String getType()
+	{
+		return "sante";
+	}
+   
 }

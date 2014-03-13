@@ -23,22 +23,26 @@ public class Medium {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
+	
     private String pseudo;
-    @ManyToMany(mappedBy="medium")
-    private Set<Client>  client;
-    @OneToMany(mappedBy="medium")
-    private List<Horoscope>  horoscope;
     
+	//@ManyToMany
+    //private Set<Client>  client;
     
+	//@OneToMany
+    //private List<Horoscope>  horoscope;
+    
+    //constructuers
     public Medium(String pseudo)
     {
         this.pseudo = pseudo;
     }
+	
     public Medium()
     {
-        this.pseudo = "tarte";
+        this.pseudo = "-";
     }
-    
+    //getters
     public long  getId()
     {
         return this.id;
@@ -47,5 +51,17 @@ public class Medium {
     {
         return this.pseudo;
     }
+	//setters
+	
+	public void setPseudo(String pseudo)
+	{
+        this.pseudo = pseudo;
+    }
+	//affichage
+	public void toString()
+	{
+		return pseudo;
+	}
+	
             
 }

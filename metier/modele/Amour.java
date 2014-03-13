@@ -21,10 +21,14 @@ public class Amour {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private long id;
-    @ManyToOne
+    
+	@ManyToOne
     private Signe partenaire;   
 
-    public Amour() {
+	//constructeurs
+    public Amour()
+	{
+		super();
     }
 
     public Amour(Signe partenaire)
@@ -32,5 +36,11 @@ public class Amour {
        super();
        this.partenaire = partenaire;
    }
+   
+   //affichage
+	public String getType()
+	{
+		return "amour: ";
+	}
     
 }
