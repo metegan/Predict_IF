@@ -27,4 +27,34 @@ public class EmployeDao {
         //return (Employe) q.getSingleResult();
         return em.find(Employe.class,id);
     }
+	
+	//tous les employes 
+	public List<Employe> getAllEmploye() {
+        EntityManager em = JPAUtils.obtenirEntityManager();
+        Query q = em.createQuery("SELECT e from Employe e");
+        List<Employe>  employes  = (List<Employe>) q.getResultList();
+        return employes;
+    }
+	
+	
+	//employe avec le moins de clients
+	
+	public Employe getEmployeMoinsDeClients() {
+        EntityManager em = JPAUtils.obtenirEntityManager();
+        try
+		{
+        Query q = em.createQuery("SELECT e from Employe e ORDER BY size(e.clients)");
+        Employe em = (Employe) q.getResultList().get(0); //le premier dans la liste
+		
+        return em;
+        }
+		
+		catch(IndexOutOfBoundsException i)
+		{
+			return null;
+        } 
+    }
+	
+	
+	
 }

@@ -34,6 +34,40 @@ public class ClientDao {
         q.setParameter("id", id );
         return (Client) q.getSingleResult();
     }
-
+	//recherche de tous les clients 
+	public List<Client> getAllClients() {
+        EntityManager em = JPAUtils.obtenirEntityManager();
+        Query q = em.createQuery("SELECT c from Client c");
+        List<Client> clients = (List<Client>) q.getResultList();
+        return clients;
+    }
+	//client par employe
+	public List<Client> getClientByEmploye(Employe e) { 
+        int employeId = e.getId();
+        EntityManager em = JPAUtils.obtenirEntityManager();
+        Query q = em.createQuery("SELECT e from Employe e WHERE =" + employeId);   
+        List<Client> clients = (List<Client>) q.getResultList();
+        return clients;
+    }
+	//client par nom
+	public List<Client> getClientsByName(String name) {
+        String query = "SELECT c FROM Client c WHERE";
+        
+        for(String n : name.split(" ")) {
+            query += "'c.prenom' LIKE '%"+n+"%' OR 'c.nom' LIKE '%"+n+"%' OR ";
+        }
+        query = query.substring(0, query.length() - 3);
+        
+        EntityManager em = JPAUtils.obtenirEntityManager();
+        Query q = em.createQuery(query);
+        List<Client> clients=(List<Client>) q.getResultList();
+        return clients ;
+	}
+	
+	
+	
+	
+	
+	
     
 }

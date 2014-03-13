@@ -22,125 +22,108 @@ import metier.modele.Prediction;
  * @author Administrateur
  */
 public class Service {
-    MediumDao mediumDao;
-               
+                  
     public Service() {
-        mediumDao = new MediumDao();
-    }
-
-    /**************************************************************************
-     *                      ADD
-     * /***********************************************************************/
+	public static final int TRAVAIL = 0;
+    public static final int SANTE = 1;
+    public static final int AMOUR = 2;
+   
+	//ajout de client, medium, prediction, horoscope, employe
     public static void addClient( Client c )
     {
-        JpaUtil.creerEntityManager();
-        JpaUtil.ouvrirTransaction();
-        ClientDao.persist(c);
-        JpaUtil.validerTransaction();
-        JpaUtil.fermerEntityManager();
+		  try {
+
+            JPAUtils.creerEntityManager();
+            JPAUtils.ouvrirTransaction();
+            new ClientDao.persist(c);
+            JPAUtils.validerTransaction();
+            JPAUtils.fermerEntityManager();
+        } 
+		catch (RollbackException ex) {
+            JPAUtils.annulerTransaction();
+        }
     }
 
-    public void addMedium( Medium m)
+    public void addMedium( Medium m )
     {
-            JpaUtil.creerEntityManager();
-            try {
-                JpaUtil.ouvrirTransaction();
-                mediumDao.persist(m);
-                JpaUtil.validerTransaction();
-            }
-            catch( Exception e) {
-                e.printStackTrace();
-                JpaUtil.annulerTransaction();
-            }
-            finally {
-                JpaUtil.fermerEntityManager();
-            }
+           try {
+            JPAUtils.creerEntityManager();
+            JPAUtils.ouvrirTransaction();
+            new MediumDao().persist(m);
+            JPAUtils.validerTransaction();
+            JPAUtils.fermerEntityManager();
+        } 
+		catch (RollbackException ex) {
+            JPAUtils.annulerTransaction();
+        }
     }
    
-        public static void addPrediction( Prediction p)
+    public static void addPrediction( Prediction p )
     {
         try {
-            JpaUtil.creerEntityManager();
-            try {
-                JpaUtil.ouvrirTransaction();
-                PredictionDao.persist(p);
-                JpaUtil.validerTransaction();
-            }
-            catch( Exception e) {
-                e.printStackTrace();
-                JpaUtil.annulerTransaction();
-            }
-            finally {
-                JpaUtil.fermerEntityManager();
-            }
-        }
-        catch( Exception e) {
-                e.printStackTrace();
+            JPAUtils.creerEntityManager();
+            JPAUtils.ouvrirTransaction();
+            new PredictionDao().persist(p);
+            JPAUtils.validerTransaction();
+            JPAUtils.fermerEntityManager();
+        } 
+		catch (RollbackException ex) {
+            JPAUtils.annulerTransaction();
         }
     }
  
-   public static void addHoroscope( Horoscope h)
+   public static void addHoroscope( Horoscope h )
     {
         try {
-            JpaUtil.creerEntityManager();
-            try {
-                JpaUtil.ouvrirTransaction();
-                HoroscopeDao.persist(h);
-                JpaUtil.validerTransaction();
-            }
-            catch( Exception e) {
-                e.printStackTrace();
-                JpaUtil.annulerTransaction();
-            }
-            finally {
-                JpaUtil.fermerEntityManager();
-            }
-        }
-        catch( Exception e) {
-                e.printStackTrace();
+            JPAUtils.creerEntityManager();
+            JPAUtils.ouvrirTransaction();
+            new HoroscopeDao().insert(h);
+            JPAUtils.validerTransaction();
+            JPAUtils.fermerEntityManager();
+        } 
+		catch (RollbackException ex) {
+            JPAUtils.annulerTransaction();
         }
     }
       
    
-      public static void addEmploye( Employe em)
+    public static void addEmploye( Employe em )
     {
-        try {
-            JpaUtil.creerEntityManager();
-            try {
-                JpaUtil.ouvrirTransaction();
-                EmployeDao.persist(em);
-                JpaUtil.validerTransaction();
-            }
-            catch( Exception e) {
-                e.printStackTrace();
-                JpaUtil.annulerTransaction();
-            }
-            finally {
-                JpaUtil.fermerEntityManager();
-            }
-        }
-        catch( Exception e) {
+         try {
+            JPAUtils.creerEntityManager();
+            JPAUtils.ouvrirTransaction();
+            new EmployeDao().insert(em);
+            JPAUtils.validerTransaction();
+            JPAUtils.fermerEntityManager();
+        } 
+		catch (RollbackException ex) {
+            JPAUtils.annulerTransaction();
         }
     }
       
-    public static Client getClient( long id )
+	//getters 
+	//liste des clients 
+	public static List<Client> getClients()
     {
-        JpaUtil.creerEntityManager();
-        JpaUtil.ouvrirTransaction();
-        Client c = ClientDao.getClient(id);
-        JpaUtil.validerTransaction();
-        JpaUtil.fermerEntityManager();
-        return c;
+       
+
+        JPAUtils.creerEntityManager();
+        List<Client> clients = new ClientDao().getAllClients();
+		JPAUtils.fermerEntityManager();
+        return clients;
+            
     }
-    public Medium getMedium( long id )
+	//liste de mediums
+    public static List<Medium> getMediums()
     {
-        JpaUtil.creerEntityManager();
-        JpaUtil.ouvrirTransaction();
-        Medium m = mediumDao.getMedium(id);
-        JpaUtil.validerTransaction();
-        JpaUtil.fermerEntityManager();
-        return m;
+        JPAUtils.creerEntityManager();
+        List<Medium> mediums = new MediumDao().getAllMediums();
+        JPAUtils.fermerEntityManager();
+        return mediums;
     }
+	
+	
+	//ajout d un medium a un client 
     public void addMediumToClient( Medium m, Client c)
     {
         JpaUtil.creerEntityManager();
@@ -153,7 +136,7 @@ public class Service {
         JpaUtil.validerTransaction();
         JpaUtil.fermerEntityManager();
     }
-    
+    //
     public void MediumToClient( Client c, List<Medium> mediums )
     {
         JpaUtil.creerEntityManager();
@@ -168,5 +151,43 @@ public class Service {
         JpaUtil.validerTransaction();
         JpaUtil.fermerEntityManager();
     }
+	// affichage
+	public static String afficherListeClients() {
+        JPAUtils.creerEntityManager();
+        List<Client> clients = new ClientDao().getAllClients();
+        JPAUtils.fermerEntityManager();
+        return clients.toString();
+    }
+	//liste historique des predictions d un client
+	public static List<Horoscope> generateOldPredictions(Client c) {
+        JPAUtils.creerEntityManager();
+        List<Horoscope> horoscopes =
+		new HoroscopeDao().getHoroscopesByClient(c);
+        JPAUtils.fermerEntityManager();
+        return horoscopes;
+    }
+	//liste predictions par type et niveau 
+	public static List<Prediction> generateListePredictions(int type, int niveau) {
+        JPAUtils.creerEntityManager();
+        List<Prediction> predictions = new PredictionDao()
+                .getPredictionByLevelAndType(type, niveau);
+        JPAUtils.fermerEntityManager();
+        return predictions;
+    }
+    //l employe qui a le moins de clients 
+    public static Employe generateEmployeMoinsDeClients() { 
+        JPAUtils.creerEntityManager();
+        Employe e = new EmployeDao().getEmployeMoinsDeClients();
+        JPAUtils.fermerEntityManager();
+        return e;
+    }
+    
+	
+	
+
+	
+	
+	
+	
     
 }

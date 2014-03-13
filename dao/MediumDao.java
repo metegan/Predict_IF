@@ -14,13 +14,14 @@ import metier.modele.Medium;
  */
 public class MediumDao {
     
-
+	//persist
     public void persist( Medium m)
     {
         EntityManager em = JpaUtil.obtenirEntityManager();
         em.persist(m);
     }
-    
+    //recherche
+	//par id
     public Medium getMediumById( long id )
     {
         EntityManager em = JpaUtil.obtenirEntityManager();
@@ -28,5 +29,11 @@ public class MediumDao {
         //q.setParameter("id", id );
         //return (Medium) q.getSingleResult();
         return em.find(Medium.class,id);
+	//tout
+	public List<Medium> getAllMediums() {
+        EntityManager em = JPAUtils.obtenirEntityManager();
+        Query q = em.createQuery("SELECT m from Medium m");
+        List<Medium> mediums = (List<Medium>) q.getResultList();
+        return mediums;
     }
 }
